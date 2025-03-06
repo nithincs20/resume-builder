@@ -55,3 +55,12 @@ Template page
 - nandana2564@gmail.com
 - sammu5285@gmail.com
 
+
+### conversion of file
+- pdf.js - A general-purpose, web standards-based platform for parsing and rendering PDFs
+- Mammoth.js - .docx to HTML converter
+- html2pdf.js - html2pdf.js converts any webpage or element into a printable PDF entirely client-side using html2canvas and jsPDF.
+- Handlebars.js - template engine
+
+- draft.js - Live editing of file content from browser
+- jsPDF - A library to generate PDFs in JavaScript. PDF export
