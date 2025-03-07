@@ -1,12 +1,41 @@
-//Open modal
-function openModal(templateName, imgSrc) {
-    document.getElementById("resumeModal").style.display = "flex";
-    document.getElementById("modal-title").innerText = templateName;
-    document.getElementById("modal-image").src = imgSrc; 
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchTemplates();
+});
+
+function fetchTemplates() {
+    fetch("http://localhost:8080/templates") 
+        .then(response => response.json())
+        .then(data => displayTemplates(data))
+        .catch(error => console.error("Error fetching templates:", error));
 }
 
+function displayTemplates(templates) {
+    const container = document.getElementById("templates-container");
+    container.innerHTML = "";
 
-//Close the modal
+    templates.forEach(template => {
+        const templateCard = document.createElement("div");
+        templateCard.classList.add("template-card");
+
+        templateCard.innerHTML = `
+            <img onclick="openModal('${template.name}', '${template.image}')" src="${template.image}" alt="${template.name}">
+            <h2>${template.name}</h2>
+            <label class="upload-btn">
+                <input type="file"> Upload Resume
+            </label>
+        `;
+
+        container.appendChild(templateCard);
+    });
+}
+
+function openModal(name, imageSrc) {
+    document.getElementById("modal-title").textContent = name;
+    document.getElementById("modal-image").src = imageSrc;
+    document.getElementById("resumeModal").style.display = "block";
+}
+
 function closeModal() {
     document.getElementById("resumeModal").style.display = "none";
 }
