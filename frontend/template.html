@@ -33,68 +33,69 @@
    <h2>Select Your Template</h2>
 
    <div class="templates-container">
-       <div class="template-card">
-           <img onclick="openModal('Basic', this.src)" src="https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg">
            <h2>Basic</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file" > Choose Resume
            </label>
+           <button onclick="uploadFile()">Upload Resume</button> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Modern Basic', this.src)" src="https://tse4.mm.bing.net/th?id=OIP.QpsQWZxxJfADSgmiEaq9mgHaKP&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse4.mm.bing.net/th?id=OIP.QpsQWZxxJfADSgmiEaq9mgHaKP&pid=Api&P=0&h=180">
            <h2>Modern Basic</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Diamond', this.src)"  src="https://marketplace.canva.com/EAE-TBgRwsI/1/0/1131w/canva-pink-simple-profile-resume-Zf7Tc6sytxE.jpg">
+       <div class="template-card" onclick="openModal(this)">
+           <img  src="https://marketplace.canva.com/EAE-TBgRwsI/1/0/1131w/canva-pink-simple-profile-resume-Zf7Tc6sytxE.jpg">
            <h2>Diamond</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Refined Diamond', this.src)" src="https://tse4.mm.bing.net/th?id=OIP.rnNjzXv8oAlZgQoLuSDkywHaKe&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse4.mm.bing.net/th?id=OIP.rnNjzXv8oAlZgQoLuSDkywHaKe&pid=Api&P=0&h=180">
            <h2>Refined Diamond</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Elegant', this.src)" src="https://tse4.mm.bing.net/th?id=OIP.T1drwMRLlqGfBesepUOzpAHaKZ&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse4.mm.bing.net/th?id=OIP.T1drwMRLlqGfBesepUOzpAHaKZ&pid=Api&P=0&h=180">
            <h2>Elegant</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Premium Elegant', this.src)" src="https://tse4.mm.bing.net/th?id=OIP.IxfDtNURNsDOB6okDWn4bQHaKe&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse4.mm.bing.net/th?id=OIP.IxfDtNURNsDOB6okDWn4bQHaKe&pid=Api&P=0&h=180">
            <h2>Premium Elegant</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Spiral', this.src)" src="https://tse3.mm.bing.net/th?id=OIP.fZ1IQoNco5tJwiza4GbzyQHaKe&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse3.mm.bing.net/th?id=OIP.fZ1IQoNco5tJwiza4GbzyQHaKe&pid=Api&P=0&h=180">
            <h2>Spiral</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
 
-       <div class="template-card">
-           <img onclick="openModal('Creative Spiral', this.src)" src="https://tse3.mm.bing.net/th?id=OIP.jCboCEGxnM7KjHjTlevEbwHaKY&pid=Api&P=0&h=180">
+       <div class="template-card" onclick="openModal(this)">
+           <img src="https://tse3.mm.bing.net/th?id=OIP.jCboCEGxnM7KjHjTlevEbwHaKY&pid=Api&P=0&h=180">
            <h2>Creative Spiral</h2>
-           <label class="upload-btn">
-               <input type="file"> Upload Resume
-           </label>
+           <!-- <label class="upload-btn">
+               <input id="fileInput" type="file"> Upload Resume
+           </label> -->
        </div>
        
    </div>
@@ -106,8 +107,10 @@
         <img id="modal-image" src="" alt="Selected Template" class="modal-img">
         <h2 id="modal-title"></h2>
         <label class="upload-btn">
-            <input type="file"> Upload Resume
+            <input id="fileInput" type="file" onchange="updateLabel(this)"> 
+            <span>Select Resume</span>
         </label>
+        <button class="upload-btn" onclick="uploadFile()">Upload Resume</button>
     </div>
    </div>
 
