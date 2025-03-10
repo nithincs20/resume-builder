@@ -30,10 +30,10 @@ function displayTemplates(templates) {
     });
 }
 
-function openModal(name, imageSrc) {
-    document.getElementById("modal-title").textContent = name;
-    document.getElementById("modal-image").src = imageSrc;
-    document.getElementById("resumeModal").style.display = "block";
+function openModal(card) {
+    document.getElementById("resumeModal").style.display = "flex";
+    document.getElementById("modal-title").innerText = card.querySelector("h2").innerText;
+    document.getElementById("modal-image").src = card.querySelector("img").src;
 }
 
 function closeModal() {

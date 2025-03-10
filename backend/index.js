@@ -1,9 +1,10 @@
 const express = require('express');
-
+const multer = require("multer");
+const path = require("path");
+const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 
 const templates = [
     { id: 1, name: "Basic", image: "https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg" },
@@ -25,10 +26,6 @@ app.listen(8080, () => {
     console.log("server started")
 
 })
-
-const multer = require("multer");
-const path = require("path");
-const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
