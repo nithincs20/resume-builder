@@ -1,9 +1,18 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0")
+    .then(() => {
+        console.log("Connected to MongoDB Atlas");
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+    });
 
 
 const templates = [
