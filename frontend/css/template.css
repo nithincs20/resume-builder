@@ -220,6 +220,9 @@ footer {
     height: fit-content;
     text-align: center;
     position: relative;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 1rem;
 }
 
 /* .modal-title{

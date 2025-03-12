@@ -1,5 +1,7 @@
 const express = require('express');
-const cors = require('cors');
+const multer = require("multer");
+const path = require("path");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const templateModel = require('./models/template');
 
@@ -14,7 +16,6 @@ mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/
     .catch((err) => {
         console.error("MongoDB connection error:", err);
     });
-
 
 const templates = [
     { id: 1, name: "Basic", image: "https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg" },
@@ -31,8 +32,6 @@ app.get('/templates', (req, res) => {
     res.json(templates);
 });
 
-
-
 app.post("/Addtemplate",(req,res)=>{
     let input=req.body
     let template =new templateModel(input)
@@ -41,8 +40,35 @@ app.post("/Addtemplate",(req,res)=>{
     res.json({"status":"success"})
 })
 
-app.listen(8080, () => {
-    console.log("server started");
+//Storage 
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
+
+const upload = multer({ storage: storage });
+
+app.use("/uploads", express.static("uploads"));
+
+//Files uploaded
+app.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) return res.status(400).send("No file uploaded.");
+  res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
+});
+
+app.get("/files", (req, res) => {
+  const fs = require("fs");
+  const files = fs.readdirSync("uploads/").map((file) => ({
+    name: file,
+    url: `/uploads/${file}`,
+  }));
+  res.json(files);
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
