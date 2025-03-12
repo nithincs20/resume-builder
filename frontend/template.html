@@ -35,17 +35,20 @@
        
     </div>
   
-    <!-- Modal window -->
-    <div id="resumeModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img id="modal-image" src="" alt="Selected Template" class="modal-img">
-            <h2 id="modal-title"></h2>
-            <label class="upload-btn">
-                <input type="file"> Upload Resume
-            </label>
-        </div>
+       <!-- Modal window -->
+   <div id="resumeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img id="modal-image" src="" alt="Selected Template" class="modal-img">
+        <h2 id="modal-title"></h2>
+        <label class="upload-btn">
+            <input id="fileInput" type="file" onchange="updateLabel(this)"> 
+            <span>Select Resume</span>
+        </label>
+        <button class="upload-btn" onclick="uploadFile()">Upload Resume</button>
     </div>
+   </div>
+
 
     <script src="js/script.js"></script>
 
