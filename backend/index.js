@@ -3,9 +3,10 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const templateModel = require('./models/template');
 
 const app = express();
-app.use(express.json());
+app.use(express.json());  
 app.use(cors());
 
 mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0")
@@ -15,8 +16,6 @@ mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/
     .catch((err) => {
         console.error("MongoDB connection error:", err);
     });
-
-
 
 const templates = [
     { id: 1, name: "Basic", image: "https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg" },
@@ -29,17 +28,17 @@ const templates = [
     { id: 8, name: "Creative Spiral", image: "https://tse3.mm.bing.net/th?id=OIP.jCboCEGxnM7KjHjTlevEbwHaKY&pid=Api&P=0&h=180" }
 ];
 
-
 app.get('/templates', (req, res) => {
     res.json(templates);
 });
 
-app.listen(8080, () => {
-    console.log("Server started ");
-});
-
-app.use(cors());
-app.use(express.json());
+app.post("/Addtemplate",(req,res)=>{
+    let input=req.body
+    let template =new templateModel(input)
+    template.save()
+    console.log(template)
+    res.json({"status":"success"})
+})
 
 //Storage 
 const storage = multer.diskStorage({
@@ -69,5 +68,7 @@ app.get("/files", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
