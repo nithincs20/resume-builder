@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchTemplates() {
-    fetch("http://localhost:8080/templates") 
+    fetch("http://localhost:5000/templates") 
         .then(response => response.json())
         .then(data => displayTemplates(data))
         .catch(error => console.error("Error fetching templates:", error));
