@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const templateModel = require('./models/template');
+const templateModel = require("./models/template");
 
 const app = express();
 app.use(express.json());  
@@ -28,17 +28,17 @@ const templates = [
     { id: 8, name: "Creative Spiral", image: "https://tse3.mm.bing.net/th?id=OIP.jCboCEGxnM7KjHjTlevEbwHaKY&pid=Api&P=0&h=180" }
 ];
 
-app.get('/templates', (req, res) => {
+app.get("/templates", (req, res) => {
     res.json(templates);
 });
 
 app.post("/Addtemplate",(req,res)=>{
-    let input=req.body
-    let template =new templateModel(input)
-    template.save()
-    console.log(template)
-    res.json({"status":"success"})
-})
+    let input=req.body;
+    let template =new templateModel(input);
+    template.save();
+    console.log(template);
+    res.json({"status":"success"});
+});
 
 //Storage 
 const storage = multer.diskStorage({
