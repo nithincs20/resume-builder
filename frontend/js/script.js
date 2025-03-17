@@ -65,3 +65,45 @@ async function uploadFile() {
     console.log("File URL:", data.fileUrl);
   }
 
+  document.addEventListener("DOMContentLoaded", function () {
+    // Sample resume data (this can be replaced with API data)
+    const resumeData = {
+        name: "John Doe",
+        job_title: "Software Engineer",
+        email: "johndoe@example.com",
+        phone: "+1 234 567 890",
+        summary: "Experienced software engineer with expertise in web development.",
+        skills: ["JavaScript", "React.js", "Node.js", "MongoDB", "Express.js"],
+        experience: [
+            {
+                company: "XYZ Tech",
+                position: "Senior Software Engineer",
+                year: "2021 - Present",
+                description: "Developing and maintaining scalable web applications using modern JavaScript frameworks."
+            },
+            {
+                company: "ABC Corp",
+                position: "Software Developer",
+                year: "2018 - 2021",
+                description: "Built and optimized APIs, improving application performance and scalability."
+            }
+        ],
+        education: {
+            institution: "ABC University",
+            degree: "BSc in Computer Science",
+            year: "2017"
+        }
+    };
+
+    // Get the Handlebars template from HTML
+    const templateSource = document.getElementById("resume-template").innerHTML;
+
+    // Compile the template into a function
+    const template = Handlebars.compile(templateSource);
+
+    // Generate the HTML by passing the data
+    const compiledHtml = template(resumeData);
+
+    // Insert the generated HTML into the page
+    document.getElementById("resume-container").innerHTML = compiledHtml;
+});
