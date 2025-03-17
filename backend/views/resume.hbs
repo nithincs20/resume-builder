@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{name}} - Resume</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ccc; }
+        h1, h2 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 5px; }
+        .section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{name}}</h1>
+        <p><strong>Email:</strong> {{email}}</p>
+        <p><strong>Phone:</strong> {{phone}}</p>
+        <p><strong>Summary:</strong> {{summary}}</p>
+
+        <div class="section">
+            <h2>Experience</h2>
+            {{#each experience}}
+                <h3>{{company}}</h3>
+                <p><strong>Position:</strong> {{position}}</p>
+                <p><strong>Duration:</strong> {{duration}}</p>
+                <p>{{description}}</p>
+            {{/each}}
+        </div>
+
+        <div class="section">
+            <h2>Education</h2>
+            {{#each education}}
+                <p><strong>{{degree}}</strong> - {{institution}} ({{year}})</p>
+            {{/each}}
+        </div>
+
+        <div class="section">
+            <h2>Skills</h2>
+            <ul>
+                {{#each skills}}
+                    <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
