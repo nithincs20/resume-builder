@@ -4,10 +4,21 @@ const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const templateModel = require('./models/template');
+const { engine } = require("express-handlebars");
 
 const app = express();
 app.use(express.json());  
 app.use(cors());
+
+// Setup Handlebars
+app.engine('hbs', engine({ 
+    extname: '.hbs',
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views', 'layouts')
+}));
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+
 
 mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
@@ -40,32 +51,72 @@ app.post("/Addtemplate",(req,res)=>{
     res.json({"status":"success"})
 })
 
-//Storage 
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+// //Storage 
+// const storage = multer.diskStorage({
+//   destination: "uploads/",
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+
+// app.use("/uploads", express.static("uploads"));
+
+// //Files uploaded
+// app.post("/upload", upload.single("file"), (req, res) => {
+//   if (!req.file) return res.status(400).send("No file uploaded.");
+//   res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
+// });
+
+// app.get("/files", (req, res) => {
+//   const fs = require("fs");
+//   const files = fs.readdirSync("uploads/").map((file) => ({
+//     name: file,
+//     url: `/uploads/${file}`,
+//   }));
+//   res.json(files);
+// });
+
+
+
+// Sample Resume Data
+const resumeData = {
+    "name": "John Doe",
+    "job_title": "Software Engineer",
+    "email": "johndoe@example.com",
+    "phone": "+1 234 567 890",
+    "summary": "Experienced software engineer with expertise in web development.",
+    "skills": ["JavaScript", "React.js", "Node.js", "MongoDB", "Express.js"],
+    "experience": [
+        {
+            "company": "XYZ Tech",
+            "position": "Senior Software Engineer",
+            "year": "2021 - Present",
+            "description": "Developing and maintaining scalable web applications using modern JavaScript frameworks."
+        },
+        {
+            "company": "ABC Corp",
+            "position": "Software Developer",
+            "year": "2018 - 2021",
+            "description": "Built and optimized APIs, improving application performance and scalability."
+        }
+    ],
+    "education": {
+        "institution": "ABC University",
+        "degree": "BSc in Computer Science",
+        "year": "2017"
+    }
+};
+
+// Route to Render Resume
+app.get("/resume", (req, res) => {
+    res.render("resume_template", resumeData);
 });
 
-const upload = multer({ storage: storage });
 
-app.use("/uploads", express.static("uploads"));
 
-//Files uploaded
-app.post("/upload", upload.single("file"), (req, res) => {
-  if (!req.file) return res.status(400).send("No file uploaded.");
-  res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
-});
 
-app.get("/files", (req, res) => {
-  const fs = require("fs");
-  const files = fs.readdirSync("uploads/").map((file) => ({
-    name: file,
-    url: `/uploads/${file}`,
-  }));
-  res.json(files);
-});
 
 const PORT = process.env.PORT || 5000;
 
