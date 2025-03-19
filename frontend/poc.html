@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+
+    <!-- Handlebars.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+
+    <link rel="stylesheet" href="css/poc.css">
+</head>
+<body>
+    <div id="resume-container"></div> <!-- Resume output will be displayed here -->
+
+    <!-- Handlebars Template -->
+    <script id="resume-template" type="text/x-handlebars-template">
+        <div class="container">
+            <div class="header">
+                <h1>{{name}}</h1>
+                <p><strong>{{job_title}}</strong></p>
+                <p>Email: {{email}} | Phone: {{phone}}</p>
+            </div>
+
+            <div class="section">
+                <h2>Summary</h2>
+                <p>{{summary}}</p>
+            </div>
+
+            <div class="section">
+                <h2>Skills</h2>
+                <ul>
+                    {{#each skills}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Experience</h2>
+                {{#each experience}}
+                <p><strong>{{company}}</strong> - {{position}} ({{year}})</p>
+                <p>{{description}}</p>
+                {{/each}}
+            </div>
+
+            <div class="section">
+                <h2>Education</h2>
+                <p><strong>{{education.institution}}</strong> - {{education.degree}} ({{education.year}})</p>
+            </div>
+        </div>
+    </script>
+
+    <!-- JavaScript file -->
+    <script src="js/script.js"></script>
+</body>
+</html>
