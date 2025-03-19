@@ -65,3 +65,32 @@ async function uploadFile() {
     console.log("File URL:", data.fileUrl);
   }
 
+
+  function sendEmail() {
+    const email = document.getElementById("email").value;
+    const alertMessage = document.getElementById("alertMessage").value;
+    const status = document.getElementById("status");
+
+    if (!email || !alertMessage) {
+        status.textContent = "Please fill all fields!";
+        status.style.color = "red";
+        return;
+    }
+
+    fetch("http://localhost:5000/send-alert", { // Change the URL if hosted
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, alertMessage })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log("Email sent successfully:", data); // Console log the response
+        alert("Email sent successfully! ✅"); // Show alert
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Failed to send email! ❌"); // Show error alert
+    });
+}
