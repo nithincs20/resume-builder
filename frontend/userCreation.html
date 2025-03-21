@@ -3,42 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Register User</title>
     <link rel="stylesheet" href="css/userCreation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+   <header>
+    <nav>
+        <h2>Resume Builder</h2>
+        <ul>
+            <li><a href="#Home">Home</a></li>
+            <li><a href="Template_1.html">Templates</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        
+        <div class="search-box">
+            <input type="text" id="search-bar" placeholder="Enter the theme">
+            <i class="fas fa-search"></i>
+        </div>
 
+        <ul>
+            <li><a href="userSignIn.html"><i class="fas fa-user"></i> </a></li>
+        </ul>
+    </nav>
+   </header> 
 
-    <h1 class="main-heading">Register New User</h1>
-    <div class="container">
-        <div class="card">
-            <h2></h2>
-            <form>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                </div>
+<main>
+        <div class="form-container">
+    <h2>Register New User</h2>
 
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <label for="password">Confirm Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <p class="sen">Resume</p>
-                    <label class="upload-btn">
-                        <input id="fileInput" type="file" onchange="updateLabel(this)"> 
-                        <span>Select Resume</span>
-                    </label>
-                    <button class="upload-btn" onclick="uploadFile()">Upload Resume</button>
-                
-                </div>
-
-                <button type="submit">Register</button>
-            </form>
-    </div>
-    </div>
+    <form>
+        <div class="form-ip">
+        <div class="input-group">
+            <label for="name">Name</label>
+           <input type="text" id="name" name="name" placeholder="Name" required>
+            </div>
+         <div class="input-group">
+         <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+         </div>
+        </div>
+         <div class="input-group">
+          <!-- <p class="sen">Resume</p> -->
     
-    <script src="js/script.js"></script>
+          <label class="upload-btn">
+            <input id="fileInput" type="file" onclick="uploadFile()"> 
+            <span>Upload Resume</span>
+        </label>
+         </div>
+         <button type="submit">Register</button>
+         </form>
+         </div>
+         <script src="js/script.js"></script>
+     
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h5>Resume Builder</h5>
+            <p>Build a professional resume effortlessly with our customizable templates.</p>
+        </div>
+
+        <div class="footer-column">
+            <h5>Quick Links</h5>
+            <ul class="footer-links">
+                <li><a href="#Home">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h5>Contact Us</h5>
+            <p><i class="fas fa-envelope"></i> Email: resume@gmail.com</p>
+            <p><i class="fas fa-phone"></i> Phone: +91 6282011259</p>
+            <p><i class="fas fa-map-marker-alt"></i> Location: Kerala, India</p>
+        </div>
+    </div>
+</footer>
 
 </body>
 </html>

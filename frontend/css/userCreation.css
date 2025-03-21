@@ -5,6 +5,67 @@
     font-family: Arial, sans-serif;
 }
 
+h2 {
+    text-align: center;
+    margin: 1rem 0 1.5rem 0;
+    color: #cacaca;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 8px 8px;
+    color: white;
+}
+
+nav h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 5px ;
+    border-radius: 20px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.search-box i {
+    margin-left: 5px;
+    color: #555;
+}
 
 body {
     display: flex;
@@ -12,9 +73,12 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color:  #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    padding-top: 60px; 
 }
-
 
 .main-heading {
     font-size: 32px;
@@ -30,28 +94,29 @@ body {
     max-width: 600px;
 }
 
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.form-container{
+   background-color: #007bff;
+   height: fit-content;
+   width: fit-content;
+   padding:1rem;
+   border-radius: 1rem;
+   margin:4rem auto 0px auto ;
+   background-color: #ffffff;
 }
-
-/* Card Style */
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 400px; /* Increased size */
-    text-align: center;
-}
-
 
 form {
+    width: fit-content;
     display: flex;
     flex-direction: column;
+    background-color: #b3b4b4;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin: 0px auto 0px auto;
+}
+
+.form-ip{
+display: flex;
+gap: 1rem;
 }
 
 .input-group {
@@ -61,6 +126,7 @@ form {
 }
 
 input {
+    margin-top: 0.5rem;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -69,7 +135,7 @@ input {
 }
 
 button {
-    background: #007bff;
+    background: #454948;
     color: white;
     padding: 8px;
     border: none;
@@ -81,22 +147,21 @@ button {
 }
 
 button:hover {
-    background: #0056b3;
+    background: #535354;
 }
 
 .upload-btn {
     display: block;
-    width: 100%;
+    width: 80%;
     padding: 8px 10px;
-    margin-top: 10px;
+    margin: 10px auto 0px auto;
     background-color: #454948;
     color: white;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    text-align: center;
-   
+    text-align: center;  
 }
 
 .upload-btn:hover {
@@ -109,4 +174,48 @@ input[type="file"] {
 
 .sen{
     margin-top:5px;
+}
+
+footer {
+    width: 100%;
+    margin-top: 2rem;
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.footer-container {
+    max-width: 1100px;  
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;  
+    padding: 10px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin: 5px 0;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.contact-info p {
+    margin: 5px 0;
 }
