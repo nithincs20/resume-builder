@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const templateModel = require("./models/template");
 
@@ -66,6 +68,54 @@ app.get("/files", (req, res) => {
   }));
   res.json(files);
 });
+
+
+
+//-------------------------------------ADMIN LOGIN----------------------------------------------------------
+
+
+app.post("/AdminLogin", async (req, res) => {
+  const { username, password } = req.body;
+
+  // Default Admin Credentials
+  const adminUsername = "admin";
+  const adminPassword = "admin123";
+
+  try {
+      if (username === adminUsername && password === adminPassword) {
+          // 🔹 Generate Admin Token
+          const token = jwt.sign({ username, usertype: "admin" }, "resumebuilder", { expiresIn: "1d" });
+          return res.json({ status: "success", token, message: "Admin logged in successfully" });
+      }
+
+      // 🔹 Check if the user exists in the database
+      const user = await userModel.findOne({ username });
+
+      if (!user) {
+          return res.json({ status: "Username doesn't exist" });
+      }
+
+      // 🔹 Check if the user is an admin
+      if (user.usertype !== "admin") {
+          return res.status(403).json({ status: "Access denied. Admins only" });
+      }
+
+      // 🔹 Validate password
+      const isValid = bcrypt.compareSync(password, user.password);
+      if (!isValid) {
+          return res.json({ status: "Wrong password" });
+      }
+
+      // 🔹 Generate Admin Token
+      const token = jwt.sign({ username, usertype: user.usertype }, "resumebuilder", { expiresIn: "1d" });
+
+      res.json({ status: "success", token, message: "Admin login successful" });
+
+  } catch (error) {
+      res.json({ status: "Error occurred", error: error.message });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 
