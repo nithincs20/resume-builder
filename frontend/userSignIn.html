@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" href="css/userSignIn.css">
 </head>
 <body>
 
-
     <h1 class="main-heading">Welcome to Resume Builder</h1>
     <p class="description">Create professional and polished resumes effortlessly. Build, edit, and download your resume in minutes!</p>
+
     <div class="container">
         <div class="card">
-            <h2>Login</h2>
-            <form>
+            <h2>Admin Login</h2>
+            <form id="loginForm">
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
                 </div>
 
                 <div class="input-group">
@@ -28,10 +28,11 @@
                 <button type="submit">Login</button>
             </form>
 
-
             <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
         </div>
     </div>
+
+    <script src="js/script.js"> </script>
 
 </body>
 </html>
