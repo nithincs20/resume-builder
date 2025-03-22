@@ -5,20 +5,29 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const fs = require("fs");
 const templateModel = require("./models/template");
-
+const userModel = require("./models/user");
 const app = express();
-app.use(express.json());  
+const PORT = process.env.PORT || 5000;
+
+//Middleware
 app.use(cors());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../frontend")));
+app.use("/uploads", express.static("uploads"));
 
-mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0")
-    .then(() => {
-        console.log("Connected to MongoDB Atlas");
-    })
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
-    });
+//MongoDB Connection
+mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to MongoDB Atlas"))
+.catch(err => console.error("MongoDB connection error:", err));
 
+//Templates
 const templates = [
     { id: 1, name: "Basic", image: "https://www.getsetresumes.com/storage/resume-examples/November2022/YYuo4fB1NmNUGd1Ki6qD.jpg" },
     { id: 2, name: "Modern Basic", image: "https://tse4.mm.bing.net/th?id=OIP.QpsQWZxxJfADSgmiEaq9mgHaKP&pid=Api&P=0&h=180" },
@@ -34,91 +43,85 @@ app.get("/templates", (req, res) => {
     res.json(templates);
 });
 
-app.post("/Addtemplate",(req,res)=>{
-    let input=req.body;
-    let template =new templateModel(input);
-    template.save();
-    console.log(template);
-    res.json({"status":"success"});
+app.post("/Addtemplate", async (req, res) => {
+    try {
+        const template = new templateModel(req.body);
+        await template.save();
+        res.json({ status: "success", template });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "error", error: err.message });
+    }
 });
 
-//Storage 
+//File Upload 
 const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+    destination: "uploads/",
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
-app.use("/uploads", express.static("uploads"));
-
-//Files uploaded
 app.post("/upload", upload.single("file"), (req, res) => {
-  if (!req.file) return res.status(400).send("No file uploaded.");
-  res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
+    if (!req.file) return res.status(400).send("No file uploaded.");
+    res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
 });
 
 app.get("/files", (req, res) => {
-  const fs = require("fs");
-  const files = fs.readdirSync("uploads/").map((file) => ({
-    name: file,
-    url: `/uploads/${file}`,
-  }));
-  res.json(files);
+    const files = fs.readdirSync("uploads/").map((file) => ({
+        name: file,
+        url: `/uploads/${file}`,
+    }));
+    res.json(files);
 });
 
+//User Registration 
+const users = []; // You can replace this with database logic
+
+// POST route to handle registration form submission
+app.post("/register", (req, res) => {
+    const { name, email } = req.body;
+    console.log("Received user:", name, email);
+    
+    users.push({ name, email }); // Temporary (for testing)
+    
+    res.redirect("/userCreation.html");
 
 
-//-------------------------------------ADMIN LOGIN----------------------------------------------------------
+});
 
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
 
+//Admin Login 
 app.post("/AdminLogin", async (req, res) => {
-  const { username, password } = req.body;
+    const { username, password } = req.body;
+    const defaultAdmin = { username: "admin", password: "admin123" };
 
-  // Default Admin Credentials
-  const adminUsername = "admin";
-  const adminPassword = "admin123";
+    try {
+        if (username === defaultAdmin.username && password === defaultAdmin.password) {
+            const token = jwt.sign({ username, usertype: "admin" }, "resumebuilder", { expiresIn: "1d" });
+            return res.json({ status: "success", token, message: "Admin logged in successfully" });
+        }
 
-  try {
-      if (username === adminUsername && password === adminPassword) {
-          // 🔹 Generate Admin Token
-          const token = jwt.sign({ username, usertype: "admin" }, "resumebuilder", { expiresIn: "1d" });
-          return res.json({ status: "success", token, message: "Admin logged in successfully" });
-      }
+        const user = await userModel.findOne({ username });
 
-      // 🔹 Check if the user exists in the database
-      const user = await userModel.findOne({ username });
+        if (!user) return res.json({ status: "Username doesn't exist" });
+        if (user.usertype !== "admin") return res.status(403).json({ status: "Access denied" });
 
-      if (!user) {
-          return res.json({ status: "Username doesn't exist" });
-      }
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) return res.json({ status: "Wrong password" });
 
-      // 🔹 Check if the user is an admin
-      if (user.usertype !== "admin") {
-          return res.status(403).json({ status: "Access denied. Admins only" });
-      }
-
-      // 🔹 Validate password
-      const isValid = bcrypt.compareSync(password, user.password);
-      if (!isValid) {
-          return res.json({ status: "Wrong password" });
-      }
-
-      // 🔹 Generate Admin Token
-      const token = jwt.sign({ username, usertype: user.usertype }, "resumebuilder", { expiresIn: "1d" });
-
-      res.json({ status: "success", token, message: "Admin login successful" });
-
-  } catch (error) {
-      res.json({ status: "Error occurred", error: error.message });
-  }
+        const token = jwt.sign({ username, usertype: user.usertype }, "resumebuilder", { expiresIn: "1d" });
+        res.json({ status: "success", token, message: "Admin login successful" });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
 });
 
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
+//Start Server
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
