@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const pdfParse = require("pdf-parse");
 const fs = require("fs");
 const templateModel = require("./models/template");
 const userModel = require("./models/user");
@@ -77,21 +78,50 @@ app.get("/files", (req, res) => {
     res.json(files);
 });
 
-//User Registration 
-const users = []; // You can replace this with database logic
+// Extract Resume Data API (Only PDFs)
+app.get("/extract/:filename", async (req, res) => {
+  const filePath = path.join(__dirname, "uploads", req.params.filename);
 
-// POST route to handle registration form submission
-app.post("/register", (req, res) => {
-    const { name, email } = req.body;
-    console.log("Received user:", name, email);
-    
-    users.push({ name, email }); // Temporary (for testing)
-    
-    res.redirect("/userCreation.html");
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found!" });
+  }
 
+  // Check if the file is a PDF
+  if (path.extname(filePath).toLowerCase() !== ".pdf") {
+      return res.status(400).json({ message: "Unsupported file format. Only PDFs are allowed." });
+  }
 
+  try {
+      // Read and parse the PDF
+      const dataBuffer = fs.readFileSync(filePath);
+      const pdfData = await pdfParse(dataBuffer);
+      
+      // Send extracted text as JSON
+      res.json({ resumeText: pdfData.text });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error extracting data from resume." });
+  }
 });
 
+// Register User API
+app.post("/register", async (req, res) => {
+  const { name, email, resumeText } = req.body;
+
+  if (!name || !email || !resumeText) {
+      return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+      const newUser = new userModel({ name, email, resumeData: resumeText });
+      await newUser.save();
+      res.json({ message: "User registered successfully!" });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error registering user" });
+  }
+});
 
 //Admin Login 
 app.post("/AdminLogin", async (req, res) => {
