@@ -92,10 +92,6 @@ app.post("/register", (req, res) => {
 
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
 
 //Admin Login 
 app.post("/AdminLogin", async (req, res) => {
