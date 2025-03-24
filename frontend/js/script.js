@@ -147,6 +147,7 @@ async function uploadFile() {
         console.error("Error:", error);
         alert("Error processing file: " + error.message);
     }
+    location.reload();
 }
 
 // Form Submission with Resume Data
