@@ -20,6 +20,8 @@ function updateLabel(inputElement) {
     }
 }
 
+//resume upload-extract-register code 
+
 async function uploadFile() {
     const formData = new FormData();
     formData.append("name", document.getElementById("name").value);
