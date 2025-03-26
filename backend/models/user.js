@@ -1,9 +1,11 @@
 const mongoose  =require("mongoose");
 const userSchema=mongoose.Schema(
     {
-        name: { type: String, required: true }, 
-        email:{type:String,required:true}, 
-        resumeData: { type: Object }
+        name: String,
+        email: String,
+        resumeData: {
+            text: String, // Store extracted text inside an object
+        },
 
     });
 

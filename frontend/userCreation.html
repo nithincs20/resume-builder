@@ -32,7 +32,7 @@
     <div class="form-container">
         <h2>Register New User</h2>
 
-        <form action="/register" method="POST" enctype="application/x-www-form-urlencoded">
+        <form id="uploadForm" enctype="multipart/form-data">
             <div class="form-ip">
                 <div class="input-group">
                     <label for="name">Name</label>
@@ -46,14 +46,9 @@
 
             <div class="input-group">
                 <label class="upload-btn">
-                    <input id="fileInput" type="file" accept=".pdf" > 
+                    <input id="fileInput" type="file" name="file" accept=".pdf" required> 
                     <span>Upload Resume</span>
                 </label>
-            </div>
-
-            <div class="input-group">
-                <label for="resumeText">Extracted Resume Text</label>
-                <textarea id="resumeText" rows="6" placeholder="Extracted resume content will appear here..." ></textarea>
             </div>
 
             <button type="button" onclick="uploadFile()">Register</button>
@@ -88,5 +83,6 @@
 </footer>
 
 <script src="js/script.js"></script>
+
 </body>
 </html>
