@@ -16,9 +16,12 @@ const PORT = process.env.PORT || 5000;
 //Middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static frontend files from the 'public' folder
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("uploads"));
+
 
 //MongoDB Connection
 mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/resumebuilderdb?retryWrites=true&w=majority&appName=Cluster0", {
@@ -27,6 +30,7 @@ mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/
 })
 .then(() => console.log("Connected to MongoDB Atlas"))
 .catch(err => console.error("MongoDB connection error:", err));
+
 
 //Templates
 const templates = [
@@ -65,63 +69,64 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.post("/upload", upload.single("file"), (req, res) => {
-    if (!req.file) return res.status(400).send("No file uploaded.");
-    res.json({ message: "File uploaded!", fileUrl: `/uploads/${req.file.filename}` });
+
+
+app.post("/upload", upload.single("file"), async (req, res) => {
+    // console.log(req.file); 
+    if (!req.file) return res.status(400).json({ error: "No file uploaded." });
+
+    const filePath = path.join(__dirname, "uploads", req.file.filename);
+    const fileData = fs.readFileSync(filePath);
+
+    try {
+        // Extract text from PDF
+        const data = await pdfParse(fileData);
+        const extractedText = data.text;
+
+        // Extract Name & Email
+        const nameMatch = extractedText.match(/Name:\s*([^\n]+)/i);
+        const emailMatch = extractedText.match(/[\w.-]+@[\w.-]+\.\w+/);
+
+        const name = nameMatch ? nameMatch[1].trim() : "Unknown";
+        const email = emailMatch ? emailMatch[0] : "Not Found";
+
+        if (email === "Not Found") {
+            return res.status(400).json({ error: "Email not found in resume." });
+        }
+
+        // Check if email already exists in the database
+        const existingUser = await userModel.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({
+                error: "Email already exists. Please use another email.",
+            });
+        }
+
+        // Store in MongoDB
+        const resumeEntry = new userModel({
+            name,
+            email,
+            resumeData: { text: extractedText },
+        });
+
+        await resumeEntry.save();
+
+        res.json({
+            message: "Resume Uploaded & User Registered Successfully!",
+            name,
+            email,
+            resumeData:{ text: extractedText.substring(0, 300) + "..." },
+        });
+
+    } catch (error) {
+        console.error("Error processing file:", error);
+        res.status(500).json({ error: "Error processing file" });
+    }
 });
 
-app.get("/files", (req, res) => {
-    const files = fs.readdirSync("uploads/").map((file) => ({
-        name: file,
-        url: `/uploads/${file}`,
-    }));
-    res.json(files);
-});
 
-// Extract Resume Data API (Only PDFs)
-app.get("/extract/:filename", async (req, res) => {
-  const filePath = path.join(__dirname, "uploads", req.params.filename);
 
-  // Check if file exists
-  if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found!" });
-  }
-
-  // Check if the file is a PDF
-  if (path.extname(filePath).toLowerCase() !== ".pdf") {
-      return res.status(400).json({ message: "Unsupported file format. Only PDFs are allowed." });
-  }
-
-  try {
-      // Read and parse the PDF
-      const dataBuffer = fs.readFileSync(filePath);
-      const pdfData = await pdfParse(dataBuffer);
-      
-      // Send extracted text as JSON
-      res.json({ resumeText: pdfData.text });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error extracting data from resume." });
-  }
-});
-
-// Register User API
-app.post("/register", async (req, res) => {
-  const { name, email, resumeText } = req.body;
-
-  if (!name || !email || !resumeText) {
-      return res.status(400).json({ message: "All fields are required" });
-  }
-
-  try {
-      const newUser = new userModel({ name, email, resumeData: resumeText });
-      await newUser.save();
-      res.json({ message: "User registered successfully!" });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error registering user" });
-  }
-});
 
 //Admin Login 
 app.post("/AdminLogin", async (req, res) => {
@@ -141,6 +146,7 @@ app.post("/AdminLogin", async (req, res) => {
 
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) return res.json({ status: "Wrong password" });
+
 
         const token = jwt.sign({ username, usertype: user.usertype }, "resumebuilder", { expiresIn: "1d" });
         res.json({ status: "success", token, message: "Admin login successful" });
