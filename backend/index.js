@@ -16,13 +16,11 @@ const PORT = process.env.PORT || 5000;
 //Middleware
 app.use(cors());
 app.use(express.json());
-
-// Middleware
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static frontend files from the 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static("uploads"));
 
 
 //MongoDB Connection
@@ -32,6 +30,7 @@ mongoose.connect("mongodb+srv://snehatk:6282011259@cluster0.jd3vcot.mongodb.net/
 })
 .then(() => console.log("Connected to MongoDB Atlas"))
 .catch(err => console.error("MongoDB connection error:", err));
+
 
 //Templates
 const templates = [
@@ -69,6 +68,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
 
 
 app.post("/upload", upload.single("file"), async (req, res) => {
@@ -126,6 +126,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 });
 
 
+
+
 //Admin Login 
 app.post("/AdminLogin", async (req, res) => {
     const { username, password } = req.body;
@@ -144,6 +146,7 @@ app.post("/AdminLogin", async (req, res) => {
 
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) return res.json({ status: "Wrong password" });
+
 
         const token = jwt.sign({ username, usertype: user.usertype }, "resumebuilder", { expiresIn: "1d" });
         res.json({ status: "success", token, message: "Admin login successful" });

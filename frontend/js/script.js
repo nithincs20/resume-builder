@@ -1,5 +1,4 @@
 
-
 function openModal(name, imageSrc) {
     document.getElementById("modal-title").textContent = name;
     document.getElementById("modal-image").src = imageSrc;
@@ -19,6 +18,7 @@ function updateLabel(inputElement) {
         labelSpan.textContent = "Select Resume"; 
     }
 }
+
 
 //resume upload-extract-register code 
 
