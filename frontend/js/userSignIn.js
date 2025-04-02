@@ -1,9 +1,13 @@
 document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent form from refreshing the page
+    event.preventDefault(); // Prevent default form submission
 
-    // Get form values
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+    }
 
     try {
         // Send login request to backend
@@ -15,13 +19,13 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         const data = await response.json();
 
-        if (data.status === "success") {
-            localStorage.setItem("token", data.token); // Store JWT token in localStorage
-            window.location.href = "template.html"; // Redirect to Admin Dashboard
+        if (response.ok && data.status === "success") {
+            localStorage.setItem("token", data.token); 
+            localStorage.setItem("isAdmin", "true");
+            window.location.href = "template.html"; 
         } else {
-            alert(data.message || "Invalid credentials,Login Failed!");
+            alert(data.message || "Invalid credentials, Login Failed!");
         }
-
     } catch (error) {
         console.error("Error:", error);
         alert("Something went wrong. Please try again.");
