@@ -22,30 +22,39 @@ function updateLabel(inputElement) {
 
 //resume upload-extract-register code 
 
-async function uploadFile() {
-    const formData = new FormData();
-    formData.append("name", document.getElementById("name").value);
-    formData.append("email", document.getElementById("email").value);
-    formData.append("file", document.getElementById("fileInput").files[0]);
+function uploadFile() {
+    const fileInput = document.getElementById("fileInput");
+    const nameInput = document.getElementById("name").value.trim();
+    const emailInput = document.getElementById("email").value.trim();
 
-    try {
-        console.log("Uploading file...");
-        const response = await fetch("http://localhost:5000/upload", {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-        console.log("Response:", result);
-
-        if (response.ok) {
-            alert("✅ Registration Successful!");
-        } else {
-            alert("❌ Error: " + (result.error || "Server Error"));
-        }
-    } catch (error) {
-        console.error("Fetch Error:", error);
-        alert("❌ Something went wrong. Error: " + error.message);
+    if (!fileInput.files.length) {
+        alert("Please upload a resume.");
+        return;
     }
-}
 
+    if (!nameInput || !emailInput) {
+        alert("Name and email are required.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+    formData.append("name", nameInput);
+    formData.append("email", emailInput);
+
+    fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert("Resume uploaded successfully!\n" +
+                  "Name: " + data.name + "\n" +
+                  "Email: " + data.email);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
