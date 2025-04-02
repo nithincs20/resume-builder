@@ -12,6 +12,8 @@ const templateModel = require("./models/template");
 const userModel = require("./models/user");
 const app = express();
 const PORT = process.env.PORT || 5000;
+const nodemailer = require("nodemailer");
+require("dotenv").config(); // If using environment variables
 
 //Middleware
 app.use(cors());
@@ -69,11 +71,23 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
+// Nodemailer Transporter Configuration
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER, // Your email
+        pass: process.env.EMAIL_PASS, // App password
+    },
+});
 
 app.post("/upload", upload.single("file"), async (req, res) => {
-    // console.log(req.file); 
+    const { name, email } = req.body; // Get name and email from form input
+
     if (!req.file) return res.status(400).json({ error: "No file uploaded." });
+
+    if (!name || !email) {
+        return res.status(400).json({ error: "Name and email are required." });
+    }
 
     const filePath = path.join(__dirname, "uploads", req.file.filename);
     const fileData = fs.readFileSync(filePath);
@@ -82,17 +96,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         // Extract text from PDF
         const data = await pdfParse(fileData);
         const extractedText = data.text;
-
-        // Extract Name & Email
-        const nameMatch = extractedText.match(/Name:\s*([^\n]+)/i);
-        const emailMatch = extractedText.match(/[\w.-]+@[\w.-]+\.\w+/);
-
-        const name = nameMatch ? nameMatch[1].trim() : "Unknown";
-        const email = emailMatch ? emailMatch[0] : "Not Found";
-
-        if (email === "Not Found") {
-            return res.status(400).json({ error: "Email not found in resume." });
-        }
 
         // Check if email already exists in the database
         const existingUser = await userModel.findOne({ email });
@@ -107,16 +110,33 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         const resumeEntry = new userModel({
             name,
             email,
-            resumeData: { text: extractedText },
+            resumeData: { text: extractedText }, // Store extracted resume text
         });
 
         await resumeEntry.save();
 
-        res.json({
-            message: "Resume Uploaded & User Registered Successfully!",
-            name,
-            email,
-            resumeData:{ text: extractedText.substring(0, 300) + "..." },
+        // 📩 Send Registration Email with Link
+        const registrationLink = `http://your-website.com/verify?email=${encodeURIComponent(email)}`;
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Welcome to ResumeBuilder! Complete Your Registration",
+            text: `Hello ${name},\n\nThank you for registering! Click the link below to complete your registration:\n\n${registrationLink}\n\nBest regards,\nResumeBuilder Team`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Email sending error:", error);
+                return res.status(500).json({ error: "Error sending email" });
+            }
+
+            res.json({
+                message: "Resume Uploaded & User Registered Successfully! An email has been sent.",
+                name,
+                email,
+                resumeData: { text: extractedText.substring(0, 300) + "..." },
+                emailStatus: "Email sent successfully",
+            });
         });
 
     } catch (error) {
@@ -124,6 +144,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         res.status(500).json({ error: "Error processing file" });
     }
 });
+
+
 
 
 
